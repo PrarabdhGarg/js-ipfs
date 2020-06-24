@@ -96,6 +96,7 @@ module.exports = ({
     const pin = {
       add: Components.pin.add({ pinManager, gcLock, dag }),
       ls: Components.pin.ls({ pinManager, dag }),
+      query: Components.pin.query({ pinManager }),
       rm: Components.pin.rm({ pinManager, gcLock, dag })
     }
 
@@ -245,7 +246,9 @@ function createApi ({
     block,
     bootstrap: {
       add: Components.bootstrap.add({ repo }),
+      clear: Components.bootstrap.clear({ repo }),
       list: Components.bootstrap.list({ repo }),
+      reset: Components.bootstrap.reset({ repo }),
       rm: Components.bootstrap.rm({ repo })
     },
     cat: Components.cat({ ipld, preload }),

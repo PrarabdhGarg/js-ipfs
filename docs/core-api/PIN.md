@@ -5,16 +5,21 @@
   - [Options](#options)
   - [Returns](#returns)
   - [Example](#example)
-- [`ipfs.pin.ls([cid], [options])`](#ipfspinlscid-options)
+- [`ipfs.pin.ls([options])`](#ipfspinlsoptions)
   - [Parameters](#parameters-1)
   - [Options](#options-1)
   - [Returns](#returns-1)
   - [Example](#example-1)
-- [`ipfs.pin.rm(cid, [options])`](#ipfspinrmcid-options)
+- [`ipfs.pin.query(paths, [options])`](#ipfspinquerypaths-options)
   - [Parameters](#parameters-2)
   - [Options](#options-2)
   - [Returns](#returns-2)
   - [Example](#example-2)
+- [`ipfs.pin.rm(cid, [options])`](#ipfspinrmcid-options)
+  - [Parameters](#parameters-3)
+  - [Options](#options-3)
+  - [Returns](#returns-3)
+  - [Example](#example-3)
 
 ## `ipfs.pin.add(cid, [options])`
 
@@ -61,15 +66,14 @@ console.log(pinset)
 
 A great source of [examples][] can be found in the tests for this API.
 
-## `ipfs.pin.ls([cid], [options])`
+## `ipfs.pin.ls([options])`
 
-> List all the objects pinned to local storage or under a specific hash
+> List all the objects pinned to local storage
 
 ### Parameters
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| cid | [CID][] or `Array<CID>` | List these specific CIDs |
 
 ### Options
 
@@ -77,6 +81,7 @@ An optional object which may have the following keys:
 
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
+| path | [CID][] or `Array<CID>` or `String` or `Array<String>` | List these specific CIDs or IPFS paths |
 | type | `String` | `undefined` | Filter by this type of pin ("recursive", "direct" or "indirect") |
 | timeout | `Number` | `undefined` | A timeout in ms |
 | signal | [AbortSignal][] | `undefined` |  Can be used to cancel any long running requests started as a result of this call |
@@ -99,6 +104,43 @@ for await (const { cid, type } of ipfs.pin.ls()) {
 ```
 
 A great source of [examples][] can be found in the tests for this API.
+
+## `ipfs.pin.query(paths, [options])`
+
+> Query if and how paths or CIDs are pinned to local storage
+
+### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| path | [CID][] or `Array<CID>` or `String` or `Array<String>` | CIDs or IPFS paths to search for in the pinset |
+
+### Options
+
+An optional object which may have the following keys:
+
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| type | `String` | `undefined` | Filter by this type of pin ("recursive", "direct" or "indirect") |
+| timeout | `Number` | `undefined` | A timeout in ms |
+| signal | [AbortSignal][] | `undefined` |  Can be used to cancel any long running requests started as a result of this call |
+
+### Returns
+
+| Type | Description |
+| -------- | -------- |
+| `AsyncIterable<{ cid: CID, type: string }>` | An async iterable that yields currently pinned objects with `cid` and `type` properties. `cid` is a [CID][cid] of the pinned node, `type` is the pin type ("recursive", "direct" or "indirect") |
+
+### Example
+
+```JavaScript
+for await (const { cid, type } of ipfs.pin.query([ new CID('Qmc5..'), new CID('QmZb..'), new CID('QmSo..') ])) {
+  console.log({ cid, type })
+}
+// { cid: CID(Qmc5XkteJdb337s7VwFBAGtiaoj2QCEzyxtNRy3iMudc3E), type: 'recursive' }
+// { cid: CID(QmZbj5ruYneZb8FuR9wnLqJCpCXMQudhSdWhdhp5U1oPWJ), type: 'indirect' }
+// { cid: CID(QmSo73bmN47gBxMNqbdV6rZ4KJiqaArqJ1nu5TvFhqqj1R), type: 'indirect' }
+```
 
 ## `ipfs.pin.rm(cid, [options])`
 

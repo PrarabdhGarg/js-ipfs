@@ -14,7 +14,9 @@ exports.bitswap = {
 }
 exports.bootstrap = {
   add: require('./bootstrap/add'),
+  clear: require('./bootstrap/clear'),
   list: require('./bootstrap/list'),
+  reset: require('./bootstrap/reset'),
   rm: require('./bootstrap/rm')
 }
 exports.cat = require('./cat')
@@ -69,6 +71,7 @@ exports.object = {
 exports.pin = {
   add: require('./pin/add'),
   ls: require('./pin/ls'),
+  query: require('./pin/query'),
   rm: require('./pin/rm')
 }
 exports.ping = require('./ping')

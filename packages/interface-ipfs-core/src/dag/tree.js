@@ -61,7 +61,9 @@ module.exports = (common, options) => {
     })
 
     it('should get tree with CID and path', async () => {
-      const paths = await all(ipfs.dag.tree(cidCbor, 'someData'))
+      const paths = await all(ipfs.dag.tree(cidCbor, {
+        path: 'someData'
+      }))
       expect(paths).to.eql([])
     })
 

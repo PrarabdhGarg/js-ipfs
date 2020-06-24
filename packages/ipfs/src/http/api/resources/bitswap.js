@@ -38,7 +38,8 @@ exports.wantlist = {
       }
     } = request
 
-    const list = await ipfs.bitswap.wantlist(peer, {
+    const list = await ipfs.bitswap.wantlist({
+      peer,
       signal,
       timeout
     })

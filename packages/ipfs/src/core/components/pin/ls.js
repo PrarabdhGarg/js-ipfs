@@ -1,25 +1,14 @@
 /* eslint max-nested-callbacks: ["error", 8] */
 'use strict'
 
-const { parallelMap } = require('streaming-iterables')
 const CID = require('cids')
-const { resolvePath } = require('../../utils')
 const PinManager = require('./pin-manager')
 const { PinTypes } = PinManager
 const { withTimeoutOption } = require('../../utils')
 
-const PIN_LS_CONCURRENCY = 8
-
-module.exports = ({ pinManager, dag }) => {
-  return withTimeoutOption(async function * ls (paths, options) {
-    options = options || {}
-
+module.exports = ({ pinManager }) => {
+  return withTimeoutOption(async function * ls (options = {}) {
     let type = PinTypes.all
-
-    if (paths && !Array.isArray(paths) && !CID.isCID(paths) && typeof paths !== 'string') {
-      options = paths
-      paths = null
-    }
 
     if (options.type) {
       type = options.type
@@ -30,29 +19,6 @@ module.exports = ({ pinManager, dag }) => {
       if (err) {
         throw err
       }
-    }
-
-    if (paths) {
-      paths = Array.isArray(paths) ? paths : [paths]
-
-      // check the pinned state of specific hashes
-      const cids = await resolvePath(dag, paths)
-
-      yield * parallelMap(PIN_LS_CONCURRENCY, async cid => {
-        const { reason, pinned } = await pinManager.isPinnedWithType(cid, type)
-
-        if (!pinned) {
-          throw new Error(`path '${paths[cids.indexOf(cid)]}' is not pinned`)
-        }
-
-        if (reason === PinTypes.direct || reason === PinTypes.recursive) {
-          return { cid, type: reason }
-        }
-
-        return { cid, type: `${PinTypes.indirect} through ${reason}` }
-      }, cids)
-
-      return
     }
 
     // show all pinned items of type

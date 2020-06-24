@@ -1,23 +1,20 @@
 'use strict'
 
-const CID = require('cids')
 const configure = require('../lib/configure')
 const toUrlSearchParams = require('../lib/to-url-search-params')
 
 module.exports = configure(api => {
-  return async function * ls (options = {}) {
-    const res = await api.post('pin/ls', {
+  return async (options = {}) => {
+    const res = await api.post('bootstrap/add', {
       timeout: options.timeout,
       signal: options.signal,
       searchParams: toUrlSearchParams({
         ...options,
-        stream: true
+        default: true
       }),
       headers: options.headers
     })
 
-    for await (const pin of res.ndjson()) {
-      yield { cid: new CID(pin.Cid), type: pin.Type }
-    }
+    return res.json()
   }
 })

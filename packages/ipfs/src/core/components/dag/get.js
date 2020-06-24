@@ -1,35 +1,26 @@
 'use strict'
 
-const { parseArgs } = require('./utils')
 const { withTimeoutOption } = require('../../utils')
+const first = require('it-first')
+const last = require('it-last')
 
 module.exports = ({ ipld, preload }) => {
-  return withTimeoutOption(async function get (cid, path, options) {
-    [cid, path, options] = parseArgs(cid, path, options)
-
+  return withTimeoutOption(async function get (cid, options = {}) {
     if (options.preload !== false) {
       preload(cid)
     }
 
-    if (path == null || path === '/') {
-      const value = await ipld.get(cid, options)
-
-      return {
-        value,
-        remainderPath: ''
-      }
-    } else {
-      let result
-
-      for await (const entry of ipld.resolve(cid, path)) {
-        if (options.localResolve) {
-          return entry
-        }
-
-        result = entry
+    if (options.path) {
+      if (options.localResolve) {
+        return first(ipld.resolve(cid, options.path))
       }
 
-      return result
+      return last(ipld.resolve(cid, options.path))
+    }
+
+    return {
+      value: await ipld.get(cid, options),
+      remainderPath: ''
     }
   })
 }

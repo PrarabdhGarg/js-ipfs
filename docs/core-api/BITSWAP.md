@@ -1,6 +1,6 @@
 # Bitswap API <!-- omit in toc -->
 
-- [`ipfs.bitswap.wantlist([peerId,] [options])`](#ipfsbitswapwantlistpeerid-options)
+- [`ipfs.bitswap.wantlist([options])`](#ipfsbitswapwantlistoptions)
   - [Parameters](#parameters)
   - [Options](#options)
   - [Returns](#returns)
@@ -16,15 +16,13 @@
   - [Returns](#returns-2)
   - [Example](#example-2)
 
-## `ipfs.bitswap.wantlist([peerId,] [options])`
+## `ipfs.bitswap.wantlist([options])`
 
-> Returns the wantlist, optionally filtered by peer ID
+> Returns the wantlist for your node or for a connected peer
 
 ### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| peerId | [PeerId][], [CID][], `String` or `Buffer` | An optional peer ID to return the wantlist for |
+None
 
 ### Options
 
@@ -32,6 +30,7 @@ An optional object which may have the following keys:
 
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
+| peer | [PeerId][], [CID][], `String` or `Buffer` | A peer ID to return the wantlist for |
 | timeout | `Number` | `undefined` | A timeout in ms |
 | signal | [AbortSignal][] | `undefined` | Can be used to cancel any long running requests started as a result of this call |
 
@@ -48,7 +47,7 @@ const list = await ipfs.bitswap.wantlist()
 console.log(list)
 // [ CID('QmHash') ]
 
-const list2 = await ipfs.bitswap.wantlist(peerId)
+const list2 = await ipfs.bitswap.wantlist({ peer: peerId })
 console.log(list2)
 // [ CID('QmHash') ]
 ```

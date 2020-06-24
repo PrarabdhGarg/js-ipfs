@@ -9,7 +9,9 @@ async function waitForWantlistKey (ipfs, key, opts = {}) {
   const end = Date.now() + opts.timeout
 
   while (Date.now() < end) {
-    const list = await ipfs.bitswap.wantlist(opts.peerId)
+    const list = await ipfs.bitswap.wantlist({
+      peer: opts.peerId
+    })
 
     if (list.some(cid => cid.toString() === key)) {
       return
@@ -28,7 +30,9 @@ async function waitForWantlistKeyToBeRemoved (ipfs, key, opts = {}) {
   const end = Date.now() + opts.timeout
 
   while (Date.now() < end) {
-    const list = await ipfs.bitswap.wantlist(opts.peerId)
+    const list = await ipfs.bitswap.wantlist({
+      peer: opts.peerId
+    })
 
     if (list.some(cid => cid.toString() === key)) {
       await delay(opts.interval)

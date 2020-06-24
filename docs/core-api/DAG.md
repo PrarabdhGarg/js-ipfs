@@ -7,12 +7,12 @@
   - [Options](#options)
   - [Returns](#returns)
   - [Example](#example)
-- [`ipfs.dag.get(cid, [path], [options])`](#ipfsdaggetcid-path-options)
+- [`ipfs.dag.get(cid, [options])`](#ipfsdaggetcid-path-options)
   - [Parameters](#parameters-1)
   - [Options](#options-1)
   - [Returns](#returns-1)
   - [Example](#example-1)
-- [`ipfs.dag.tree(cid, [path,] [options])`](#ipfsdagtreecid-path-options)
+- [`ipfs.dag.tree(cid, [options])`](#ipfsdagtreecid-path-options)
   - [Parameters](#parameters-2)
   - [Options](#options-2)
   - [Returns](#returns-2)
@@ -65,7 +65,7 @@ console.log(cid.toString())
 
 A great source of [examples][] can be found in the tests for this API.
 
-## `ipfs.dag.get(cid, [path], [options])`
+## `ipfs.dag.get(cid, [options])`
 
 > Retrieve an IPLD format node
 
@@ -74,7 +74,6 @@ A great source of [examples][] can be found in the tests for this API.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | cid | [CID][] | A DAG node that follows one of the supported IPLD formats |
-| path | `String` | An optional path within the DAG to resolve |
 
 ### Options
 
@@ -82,6 +81,7 @@ An optional object which may have the following keys:
 
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
+| path | `String` | An optional path within the DAG to resolve |
 | localResolve | `boolean` | `false` | If set to true, it will avoid resolving through different objects |
 | timeout | `Number` | `undefined` | A timeout in ms |
 | signal | [AbortSignal][] | `undefined` |  Can be used to cancel any long running requests started as a result of this call |
@@ -141,7 +141,7 @@ await getAndLog('zdpuAmtur968yprkhG9N5Zxn6MFVoqAWBbhUAkNLJs2UtkTq5/c/ca/1')
 
 A great source of [examples][] can be found in the tests for this API.
 
-## `ipfs.dag.tree(cid, [path,] [options])`
+## `ipfs.dag.tree(cid, [options])`
 
 > Enumerate all the entries in a graph
 
@@ -150,7 +150,6 @@ A great source of [examples][] can be found in the tests for this API.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | cid | [CID][] | A DAG node that follows one of the supported IPLD formats |
-| path | `String` | An optional path within the DAG to resolve |
 
 ### Options
 
@@ -158,6 +157,7 @@ An optional object which may have the following keys:
 
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
+| path | `String` | An optional path within the DAG to resolve |
 | recursive | `boolean` | `false` | If set to true, it will follow the links and continuously run tree on them, returning all the paths in the graph |
 | timeout | `Number` | `undefined` | A timeout in ms |
 | signal | [AbortSignal][] | `undefined` |  Can be used to cancel any long running requests started as a result of this call |

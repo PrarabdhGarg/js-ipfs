@@ -28,8 +28,7 @@ module.exports = (common, options) => {
     after(() => common.clean())
 
     it('should respect timeout option when adding bootstrap nodes', () => {
-      return testTimeout(() => ipfs.bootstrap.add(null, {
-        default: true,
+      return testTimeout(() => ipfs.bootstrap.add(validIp4, {
         timeout: 1
       }))
     })
@@ -45,13 +44,6 @@ module.exports = (common, options) => {
       expect(res).to.be.eql({ Peers: [validIp4] })
       const peers = res.Peers
       expect(peers).to.have.property('length').that.is.equal(1)
-    })
-
-    it('should return a list of bootstrap peers when called with the default option', async () => {
-      const res = await ipfs.bootstrap.add(null, { default: true })
-
-      const peers = res.Peers
-      expect(peers).to.have.property('length').that.is.gt(1)
     })
 
     it('should prevent duplicate inserts of bootstrap peers', async () => {

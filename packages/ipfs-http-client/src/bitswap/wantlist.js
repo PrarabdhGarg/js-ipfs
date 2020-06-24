@@ -5,14 +5,9 @@ const configure = require('../lib/configure')
 const toUrlSearchParams = require('../lib/to-url-search-params')
 
 module.exports = configure(api => {
-  return async (peer, options = {}) => {
-    if (peer && (peer.timeout || peer.signal)) {
-      options = peer
-      peer = undefined
-    }
-
-    if (peer) {
-      options.peer = typeof peer === 'string' ? peer : new CID(peer).toString()
+  return async (options = {}) => {
+    if (options.peer) {
+      options.peer = typeof options.peer === 'string' ? options.peer : new CID(options.peer).toString()
     }
 
     const res = await (await api.post('bitswap/wantlist', {

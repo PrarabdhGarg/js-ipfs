@@ -1,5 +1,6 @@
 'use strict'
 
+const Boom = require('@hapi/boom')
 const Joi = require('../../utils/joi')
 
 exports.list = {
@@ -72,11 +73,22 @@ exports.add = {
       }
     } = request
 
-    const list = await ipfs.bootstrap.add(addr, {
-      default: def || !addr,
-      signal,
-      timeout
-    })
+    let list
+
+    if (def) {
+      list = await ipfs.bootstrap.reset({
+        signal,
+        timeout
+      })
+    } else if (addr) {
+      list = await ipfs.bootstrap.add(addr, {
+        signal,
+        timeout
+      })
+    } else {
+      throw Boom.badRequest('arg is required')
+    }
+
     return h.response(list)
   }
 }
@@ -152,11 +164,22 @@ exports.rm = {
       }
     } = request
 
-    const list = await ipfs.bootstrap.rm(addr, {
-      all: all || !addr,
-      signal,
-      timeout
-    })
+    let list
+
+    if (all) {
+      list = await ipfs.bootstrap.clear({
+        signal,
+        timeout
+      })
+    } else if (addr) {
+      list = await ipfs.bootstrap.rm(addr, {
+        signal,
+        timeout
+      })
+    } else {
+      throw Boom.badRequest('arg is required')
+    }
+
     return h.response(list)
   }
 }
@@ -188,11 +211,11 @@ exports.rmAll = {
       }
     } = request
 
-    const list = await ipfs.bootstrap.rm(null, {
-      all: true,
+    const list = await ipfs.bootstrap.clear({
       signal,
       timeout
     })
+
     return h.response(list)
   }
 }

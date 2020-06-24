@@ -5,11 +5,19 @@ const configure = require('../lib/configure')
 const toUrlSearchParams = require('../lib/to-url-search-params')
 
 module.exports = configure(api => {
-  return async function * ls (options = {}) {
+  return async function * query (path, options = {}) {
+    if (path && (path.type || path.timeout)) {
+      options = path || {}
+      path = []
+    }
+
+    path = Array.isArray(path) ? path : [path]
+
     const res = await api.post('pin/ls', {
       timeout: options.timeout,
       signal: options.signal,
       searchParams: toUrlSearchParams({
+        arg: path.map(p => `${p}`),
         ...options,
         stream: true
       }),

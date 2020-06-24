@@ -125,7 +125,8 @@ exports.get = {
     let result
 
     try {
-      result = await ipfs.dag.get(cid, path, {
+      result = await ipfs.dag.get(cid, {
+        path,
         signal,
         timeout
       })
